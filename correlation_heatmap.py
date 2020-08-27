@@ -33,11 +33,12 @@ for ma in ma_days:
 
 btc.loc[:,['Adj Close','MA 10 days','MA 20 days','MA 50 days','MA 200 days' ]].plot(legend=True)
 
-### HEATMAP
+### CRYPTO CORRS - HEATMAP
 corr = ret_bnb.rolling('10D', min_periods=10).corr(ret_eth).plot()
 corrs = np.corrcoef([ret_bnb,ret_eth,ret_neo,ret_xlm])
 sns.heatmap(corrs,xticklabels=['BNB/BTC', 'ETH/BTC', 'NEO/BTC', 'XLM/BTC'],yticklabels=['BNB/BTC', 'ETH/BTC', 'NEO/BTC', 'XLM/BTC'],annot=True,cmap='Blues')
 
+### BTC CORR - HEATMAP
 ret_btc = btc.loc[:,'Adj Close'].pct_change().dropna()
-corr_btc = np.corrcoef([ret_btc[:-1],ret_bnb,ret_eth,ret_neo,ret_xlm])
+corr_btc = np.corrcoef([ret_btc,ret_bnb,ret_eth,ret_neo,ret_xlm]) 
 sns.heatmap(corr_btc,xticklabels=['BTC/USD','BNB/BTC', 'ETH/BTC', 'NEO/BTC', 'XLM/BTC'],yticklabels=['BTC/USD','BNB/BTC', 'ETH/BTC', 'NEO/BTC', 'XLM/BTC'],annot=True,cmap='Reds')
