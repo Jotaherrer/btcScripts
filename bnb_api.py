@@ -51,9 +51,6 @@ usd_values = usd_prices['Price'].values
 usd_modified = pd.DataFrame({"Ticker":usd_tickers, "Price USD": usd_values})
 merged_usd = usd_modified.merge(usdt_modified, on='Ticker')
 
-merged_usd['Price USD'] = pd.to_numeric(merged_usd['Price USD']).values
-merged_usd['Price USDT'] = pd.to_numeric(merged_usd['Price USDT']).values
-
 merged_usd['Spread'] = merged_usd['Price USD'] / merged_usd['Price USDT'] - 1.
 merged_usd_mod = merged_usd[(merged_usd['Spread'] < 0.2) & (merged_usd['Spread'] > -0.2)]
 merged_usd2 = merged_usd[~(merged_usd['Spread'] < 0.2) & (merged_usd['Spread'] > -0.2)]
@@ -102,3 +99,16 @@ chart_df2 = pd.DataFrame(klines_btc2, columns=["Date", 'Open', 'High', 'Low', "C
 chart_df2 = chart_df2.drop(chart_df2.columns[[6,7,8,9,10,11]],axis=1)
 chart_df2["Date"] = pd.to_datetime(chart_df2['Date'], unit='ms')
 chart_df2.set_index('Date', inplace=True, drop=True)
+
+
+## HISTORICAL DATA
+btc_daily = client.get_historical_klines('BTCUSDT', Client.KLINE_INTERVAL_1DAY, "5 years ago UTC")
+len(btc_daily)
+btc_daily[0]
+btc_daily_df = pd.DataFrame(btc_daily, columns=["Date", "Open", "High", "Low", "Close", "Volume",
+                                                "Close Time", "Quote Asset Volume", "Num. Trades",
+                                                "T1", "T2", "Ignore"])
+btc_daily_df = btc_daily_df.drop(btc_daily_df.columns[[7,9,10,11]], axis=1)
+btc_daily_df['Date'] = pd.to_datetime(btc_daily_df['Date'], unit='ms')
+btc_daily_df['Close Time'] = pd.to_datetime(btc_daily_df['Close Time'], unit='ms')
+btc_daily_df.set_index('Date', inplace=True, drop=True)
